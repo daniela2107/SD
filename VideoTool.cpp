@@ -1,26 +1,29 @@
 #include <sstream>
 #include <string>
 #include <iostream>
+#include<stdlib.h>
+#include <netdb.h>
+#include <unistd.h>
+#include <netinet/in.h>
+
 //#include <opencv2\highgui.h>
 #include "opencv2/highgui/highgui.hpp"
 //#include <opencv2\cv.h>
 #include "opencv2/opencv.hpp"
 
-#include <stdio.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <arpa/inet.h>
-#define SIZE 1
 using namespace std;
 using namespace cv;
 //initial min and max HSV filter values.
 //these will be changed using trackbars
+char str2[10];
 int H_MIN = 0;
 int H_MAX = 256;
 int S_MIN = 0;
 int S_MAX = 256;
 int V_MIN = 0;
 int V_MAX = 256;
+int var1,var2;
+int vect[2];
 //default capture width and height
 const int FRAME_WIDTH = 640;
 const int FRAME_HEIGHT = 480;
@@ -179,47 +182,204 @@ void trackFilteredObject(int &x, int &y, Mat threshold, Mat &cameraFeed) {
 		}
 		else putText(cameraFeed, "TOO MUCH NOISE! ADJUST FILTER", Point(0, 50), 1, 2, Scalar(0, 0, 255), 2);
 	}
+ 
 }
 
-int client_Socket(char *buffer) 
+/*void comenzi(char *ip ,int port, char *c) {
+   int sockfd, n;
+   struct sockaddr_in serv_addr;
+   struct hostent *server;
+   
+   char buffer[256];*/
+	
+   
+   /* Create a socket point */
+ /*  sockfd = socket(AF_INET, SOCK_STREAM, 0);
+   
+   if (sockfd < 0) {
+      perror("ERROR opening socket");
+      exit(1);
+   }
+	
+   server = gethostbyname(ip);
+   
+   if (server == NULL) {
+      fprintf(stderr,"ERROR, no such host\n");
+      exit(0);
+   }
+   
+   bzero((char *) &serv_addr, sizeof(serv_addr));
+   serv_addr.sin_family = AF_INET;
+   bcopy((char *)server->h_addr, (char *)&serv_addr.sin_addr.s_addr, server->h_length);
+   serv_addr.sin_port = htons(port);*/
+   
+   /* Now connect to the server */
+ /*  if (connect(sockfd, (struct sockaddr*)&serv_addr, sizeof(serv_addr)) < 0) {
+      perror("ERROR connecting");
+      exit(1);
+   }*/
+   
+   /* Now ask for a message from the user, this message
+      * will be read by server
+   */
+/*   int len= strlen(c);
+	 for(int i=0;i<len;i++)
+   {   */
+   /* Send message to the server */
+ /*  sprintf(str2,"%c",c[i]);
+     n = send(sockfd, str2, strlen(str2),0);
+   
+     if (n < 0) {
+      perror("ERROR writing to socket");
+      exit(1);
+     }
+     unsigned int g = sleep(1);
+     
+   }*/
+   
+   /* Now read server response 
+   bzero(buffer,256);
+   n = read(sockfd, buffer, 255);
+   
+   if (n < 0) {
+      perror("ERROR reading from socket");
+      exit(1);
+   }*/
+
+//}
+
+void detecteazaFata(){
+	comenzi("193.226.12.217",20236,"fs"); // s-au modificat coordonatele,apelezi trackfilter si iti da noile coordonate
+	
+}
+
+void deplasare(int noi1, int noi2, int el1, int el2)
 {
-  int clientSocket;
-  //char buffer[1024];
-  struct sockaddr_in serverAddr;
-  socklen_t addr_size;
-  
+if ( (noi1 >= el1) && (noi2 >= el2) ){
+  //mergem in patratul 1
+ //detectamm fata cu o functie si in functie de rezultat luam masuri
+	detecteazaFata(); // returneaza un vector de tip int cu 2 valori, noile coordonate ale noastre
+  //mergem in fata
+  if(vect[0]<=noi1 && vect[1]<=noi2)
+	{
+	comenzi("193.226.12.217",20236,"f");
+	sleep(1);
+ 	comenzi("193.226.12.217",20236,"s");
+	}
+	if(vect[0]>noi1 && vect[1]<noi2)
+	{
+	comenzi("193.226.12.217",20236,"lf");
+	sleep(1);
+ 	comenzi("193.226.12.217",20236,"s");
+	}
+	  if(vect[0]<noi1 && vect[1]>noi2)
+	{
+	comenzi("193.226.12.217",20236,"rf");
+	sleep(1);
+ 	comenzi("193.226.12.217",20236,"s");
+	}
+	  if(vect[0]>noi1 && vect[1]>noi2)
+	{
+	comenzi("193.226.12.217",20236,"llf");
+	sleep(1);
+ 	comenzi("193.226.12.217",20236,"s");
+	}
+}
+if ( (noi1 < el1) && (noi2 > el2) ){
+  //mergem in patratul 2
+   //detectamm fata cu o functie si in functie de rezultat luam masuri
 
-  /*---- Create the socket. The three arguments are: ----*/
-  /* 1) Internet domain 2) Stream socket 3) Default protocol (TCP in this case) */
-  clientSocket = socket(PF_INET, SOCK_STREAM, 0);
-  
-  /*---- Configure settings of the server address struct ----*/
-  /* Address family = Internet */
-  serverAddr.sin_family = AF_INET;
-  /* Set port number, using htons function to use proper byte order */
-  serverAddr.sin_port = htons(20236);
-  /* Set IP address to localhost */
-  serverAddr.sin_addr.s_addr = inet_addr("193.226.12.217");
+	detecteazaFata(); // returneaza un vector de tip int cu 2 valori, noile coordonate ale noastre
+  //mergem in fata
+  if(vect[0]<=noi1 && vect[1]<=noi2)
+	{
+	comenzi("193.226.12.217",20236,"rf");
+	sleep(1);
+ 	comenzi("193.226.12.217",20236,"s");
+	}
+	if(vect[0]>noi1 && vect[1]<noi2)
+	{
+	comenzi("193.226.12.217",20236,"f");
+	sleep(1);
+ 	comenzi("193.226.12.217",20236,"s");
+	}
+	  if(vect[0]<noi1 && vect[1]>noi2)
+	{
+	comenzi("193.226.12.217",20236,"llf");
+	sleep(1);
+ 	comenzi("193.226.12.217",20236,"s");
+	}
+	  if(vect[0]>noi1 && vect[1]>noi2)
+	{
+	comenzi("193.226.12.217",20236,"lf");
+	sleep(1);
+ 	comenzi("193.226.12.217",20236,"s");
+	}
+}
+if ( (noi1 > el1) && (noi2 < el2) ){
+  //mergem in patratul 3
+	detecteazaFata(); // returneaza un vector de tip int cu 2 valori, noile coordonate ale noastre
+  //mergem in fata
+  if(vect[0]<=noi1 && vect[1]<=noi2)
+	{
+	comenzi("193.226.12.217",20236,"lf");
+	sleep(1);
+ 	comenzi("193.226.12.217",20236,"s");
+	}
+	if(vect[0]>noi1 && vect[1]<noi2)
+	{
+	comenzi("193.226.12.217",20236,"llf");
+	sleep(1);
+ 	comenzi("193.226.12.217",20236,"s");
+	}
+	  if(vect[0]<noi1 && vect[1]>noi2)
+	{
+	comenzi("193.226.12.217",20236,"f");
+	sleep(1);
+ 	comenzi("193.226.12.217",20236,"s");
+	}
+	  if(vect[0]>noi1 && vect[1]>noi2)
+	{
+	comenzi("193.226.12.217",20236,"rf");
+	sleep(1);
+ 	comenzi("193.226.12.217",20236,"s");
+	}
+}
+if ( (noi1 < el1) && (noi2 < el2) ){
+  //mergem in patratul 4
+	detecteazaFata(); // returneaza un vector de tip int cu 2 valori, noile coordonate ale noastre
+  //mergem in fata
+  if(vect[0]<=noi1 && vect[1]<=noi2)
+	{
+	comenzi("193.226.12.217",20236,"llf");
+	sleep(1);
+ 	comenzi("193.226.12.217",20236,"s");
+	}
+	if(vect[0]>noi1 && vect[1]<noi2)
+	{
+	comenzi("193.226.12.217",20236,"rf");
+	sleep(1);
+ 	comenzi("193.226.12.217",20236,"s");
+	}
+	  if(vect[0]<noi1 && vect[1]>noi2)
+	{
+	comenzi("193.226.12.217",20236,"lf");
+	sleep(1);
+ 	comenzi("193.226.12.217",20236,"s");
+	}
+	  if(vect[0]>noi1 && vect[1]>noi2)
+	{
+	comenzi("193.226.12.217",20236,"f");
+	sleep(1);
+ 	comenzi("193.226.12.217",20236,"s");
+	}
+}
 
-  /* Set all bits of the padding field to 0 */
-  memset(serverAddr.sin_zero, '\0', sizeof serverAddr.sin_zero);  
+}
 
-  /*---- Connect the socket to the server using the address struct ----*/
-  addr_size = sizeof serverAddr;
-  connect(clientSocket, (struct sockaddr *) &serverAddr, addr_size);
-  
-  send(clientSocket, buffer, SIZE, 0);
-
-  /*---- Read the message from the server into the buffer ----*/
-  //recv(clientSocket, buffer, 1024, 0);
-
-  /*---- Print the received message ----*/
- // printf("Data received: %s",buffer);   
-  return 0;
- }
-int main(/*int argc, char* argv[]*/)
+int main(int argc, char* argv[])
 {
-/*
+
 	//some boolean variables for different functionality within this
 	//program
 	bool trackObjects = true;
@@ -238,8 +398,8 @@ int main(/*int argc, char* argv[]*/)
 	createTrackbars();
 	//video capture object to acquire webcam feed
 	VideoCapture capture;
-	//open capture object at location zero (default location for webcam)
-	capture.open("rtmp://172.16.254.99/live/nimic"); //un ip ca string
+	//open capture object at location zero (default location for webcam), an ip
+	capture.open("rtmp://172.16.254.99/live/nimic");
 	//set height and width of capture frame
 	capture.set(CV_CAP_PROP_FRAME_WIDTH, FRAME_WIDTH);
 	capture.set(CV_CAP_PROP_FRAME_HEIGHT, FRAME_HEIGHT);
@@ -253,31 +413,49 @@ int main(/*int argc, char* argv[]*/)
 
 
 		//store image to matrix
-		capture.read(cameraFeed);
+	capture.read(cameraFeed);
+    while (cameraFeed.empty()){
+      sleep(1);
+    }
+		while((var1 >= 0) && (var1 < 500) && (var2 >= 0) && (var2 < 500) && (x >= 0) && (x < 500) && (y >= 0) && (y < 500)){
 		//convert frame from BGR to HSV colorspace
 		cvtColor(cameraFeed, HSV, COLOR_BGR2HSV);
 		//filter HSV image between values and store filtered image to
 		//threshold matrix
-		inRange(HSV, Scalar(163, S_MIN, V_MIN), Scalar(H_MAX, S_MAX, V_MAX), threshold);
+   
+
+		inRange(HSV, Scalar(168, 60, 70), Scalar(H_MAX, S_MAX, V_MAX), threshold);
+
 		//perform morphological operations on thresholded image to eliminate noise
 		//and emphasize the filtered object(s)
-		if (useMorphOps)
-			morphOps(threshold);
+		morphOps(threshold);
 		//pass in thresholded frame to our object tracking function
 		//this function will return the x and y coordinates of the
 		//filtered object
-		if (trackObjects)
-			trackFilteredObject(x, y, threshold, cameraFeed);
-		inRange(HSV, Scalar(H_MIN, S_MIN, 208), Scalar(H_MAX, S_MAX, V_MAX), threshold);
+   
+		trackFilteredObject(x, y, threshold, cameraFeed);
+		//salvam coordonatele obiectului roz
+		var1 = x;
+		var2 = y;
+
+ 
+
+   		//filter HSV image between values and store filtered image to
+		//threshold matrix
+		inRange(HSV, Scalar(H_MIN, 79, 223), Scalar(91, S_MAX, V_MAX), threshold);
+
 		//perform morphological operations on thresholded image to eliminate noise
 		//and emphasize the filtered object(s)
-		if (useMorphOps)
-			morphOps(threshold);
+		morphOps(threshold);
 		//pass in thresholded frame to our object tracking function
 		//this function will return the x and y coordinates of the
 		//filtered object
-		if (trackObjects)
-			trackFilteredObject(x, y, threshold, cameraFeed);
+		trackFilteredObject(x, y, threshold, cameraFeed);
+		
+		//incepem strategia
+		
+		deplasare(var1, var2, x, y);
+
 
 		//show frames
 		imshow(windowName2, threshold);
@@ -288,16 +466,10 @@ int main(/*int argc, char* argv[]*/)
 		//image will not appear without this waitKey() command
 		waitKey(30);
 	}
-*/
-   // functie Socket
-    char buffer[SIZE]= {'s'};
-    //mai multe comenzi cu delay intre ele
-    for(int i = 0; i < SIZE; i++ ){
-      client_Socket(buffer);
-    }
-  
-  
-  return 0;
- 
 
+	}
+
+ 
+	return 0;
 }
+
